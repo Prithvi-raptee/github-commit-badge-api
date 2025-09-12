@@ -2,9 +2,9 @@
   "name": "github-commit-badge-api",
   "version": "1.0.0",
   "description": "API to generate a daily commit average badge for GitHub users.",
-  "main": "server.js",
+  "main": "api/index.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node api/index.js"
   },
   "dependencies": {
     "@octokit/graphql": "^7.1.1",
