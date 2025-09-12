@@ -1,2 +1,15 @@
-.vercel
+# Dependencies
+/node_modules
+
+# Environment Variables (IMPORTANT for keeping secrets safe)
 .env*.local
+
+# Local cache directory (if you create one)
+/.cache
+
+# Vercel
+.vercel
+
+# OS-generated files
+.DS_Store
+Thumbs.db
