@@ -520,258 +520,238 @@ app.get('/', (req, res) => {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>🏆 GitHub Commit Badge API</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
         <style>
+            :root {
+                --bg-color: #0D1117;
+                --card-bg: #161B22;
+                --border-color: #30363d;
+                --text-primary: #c9d1d9;
+                --text-secondary: #8b949e;
+                --accent-primary: #58a6ff;
+                --accent-hover: #82baff;
+                --code-bg: #010409;
+                --success-color: #238636;
+                --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            }
             * {
                 margin: 0;
                 padding: 0;
                 box-sizing: border-box;
             }
             body {
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                font-family: var(--font-sans);
                 line-height: 1.6;
-                color: #333;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                min-height: 100vh;
+                color: var(--text-primary);
+                background-color: var(--bg-color);
             }
             .container {
                 max-width: 1200px;
                 margin: 0 auto;
-                padding: 20px;
-                background: white;
-                min-height: 100vh;
-                box-shadow: 0 0 30px rgba(0,0,0,0.1);
+                padding: 2rem 1.5rem;
             }
             .header {
                 text-align: center;
-                margin-bottom: 40px;
-                padding: 40px 0;
-                background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-                color: white;
-                border-radius: 15px;
-                margin: -20px -20px 40px -20px;
+                margin-bottom: 4rem;
+                padding: 2rem 0;
             }
             .header h1 {
-                font-size: 3em;
-                margin-bottom: 10px;
-                text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+                font-size: 3rem;
+                font-weight: 700;
+                margin-bottom: 1rem;
+                letter-spacing: -1.5px;
+                background: linear-gradient(90deg, #58a6ff, #9370db);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
             }
             .header p {
-                font-size: 1.2em;
-                opacity: 0.9;
+                font-size: 1.25rem;
+                color: var(--text-secondary);
+                max-width: 700px;
+                margin: 0 auto;
             }
             .section {
-                margin-bottom: 40px;
-                padding: 25px;
-                background: #f8f9fa;
-                border-radius: 10px;
-                border-left: 4px solid #667eea;
+                margin-bottom: 3rem;
+                padding: 1.5rem;
+                background-color: var(--card-bg);
+                border-radius: 8px;
+                border: 1px solid var(--border-color);
             }
             .section h2 {
-                color: #2c3e50;
-                margin-bottom: 20px;
-                font-size: 1.8em;
-                display: flex;
-                align-items: center;
-                gap: 10px;
+                color: var(--text-primary);
+                margin-bottom: 1.5rem;
+                font-size: 1.75rem;
+                font-weight: 600;
+                padding-bottom: 0.75rem;
+                border-bottom: 1px solid var(--border-color);
             }
-            .quick-start {
-                background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
-                color: white;
-                border-left: 4px solid #00b894;
-            }
-            .quick-start h2 {
-                color: white;
+            code, .code-block {
+                font-family: var(--font-mono);
+                font-size: 0.9em;
+                background-color: var(--code-bg);
+                border-radius: 6px;
+                border: 1px solid var(--border-color);
             }
             code {
-                background: #2d3748;
-                color: #ed8936;
-                padding: 8px 12px;
-                border-radius: 6px;
-                font-family: 'Monaco', 'Consolas', monospace;
-                font-size: 0.9em;
-                display: inline-block;
-                margin: 5px 0;
-                word-break: break-all;
+                padding: 0.2em 0.4em;
+                color: var(--text-secondary);
             }
             .code-block {
-                background: #2d3748;
-                color: #e2e8f0;
-                padding: 20px;
-                border-radius: 8px;
-                margin: 15px 0;
+                padding: 1rem;
+                margin: 1rem 0;
                 overflow-x: auto;
-                font-family: 'Monaco', 'Consolas', monospace;
+                white-space: pre;
+            }
+            .params-grid, .examples-grid, .features-list {
+                display: grid;
+                gap: 1.5rem;
             }
             .params-grid {
-                display: grid;
                 grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-                gap: 20px;
-                margin: 20px 0;
             }
             .param-card {
-                background: white;
-                padding: 20px;
-                border-radius: 8px;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-                border-top: 3px solid #667eea;
+                padding: 1.5rem;
+                background: var(--bg-color);
+                border-radius: 6px;
+                border: 1px solid var(--border-color);
             }
             .param-card h4 {
-                color: #667eea;
-                margin-bottom: 10px;
+                color: var(--accent-primary);
+                margin-bottom: 0.75rem;
                 font-size: 1.1em;
+                font-weight: 600;
             }
             .param-card .param-name {
-                background: #667eea;
-                color: white;
+                background-color: rgba(88, 166, 255, 0.1);
+                color: var(--accent-primary);
                 padding: 4px 8px;
                 border-radius: 4px;
-                font-family: monospace;
-                font-size: 0.9em;
+                font-family: var(--font-mono);
+                font-size: 0.85em;
             }
             .examples-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-                gap: 25px;
-                margin: 25px 0;
+                grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             }
             .example-card {
-                background: white;
-                padding: 20px;
-                border-radius: 10px;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-                border: 1px solid #e1e8ed;
+                background: var(--bg-color);
+                padding: 1.5rem;
+                border-radius: 6px;
+                border: 1px solid var(--border-color);
+                transition: transform 0.2s ease, border-color 0.2s ease;
+            }
+            .example-card:hover {
+                transform: translateY(-3px);
+                border-color: var(--accent-primary);
             }
             .example-card h4 {
-                color: #2c3e50;
-                margin-bottom: 15px;
-                font-size: 1.1em;
+                color: var(--text-primary);
+                margin-bottom: 1rem;
+                font-weight: 500;
             }
             .example-card img {
-                margin: 10px 0;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-                border-radius: 4px;
+                margin: 0.5rem 0;
+                max-width: 100%;
             }
             .try-it {
-                background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
-                padding: 30px;
-                border-radius: 15px;
                 text-align: center;
-                margin: 40px 0;
-                color: #2c3e50;
-            }
-            .try-it h3 {
-                font-size: 1.5em;
-                margin-bottom: 15px;
+                background-color: var(--bg-color); /* No harsh gradient */
             }
             .input-group {
                 display: flex;
-                gap: 10px;
-                margin: 20px 0;
+                gap: 1rem;
+                margin: 1.5rem 0;
                 flex-wrap: wrap;
                 justify-content: center;
             }
             .input-group input, .input-group select {
-                padding: 10px;
-                border: 2px solid #ddd;
+                padding: 0.75rem;
+                border: 1px solid var(--border-color);
+                background-color: var(--bg-color);
+                color: var(--text-primary);
                 border-radius: 6px;
                 font-size: 1em;
-                min-width: 120px;
+                font-family: var(--font-sans);
+                min-width: 150px;
+                transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            }
+            .input-group input:focus, .input-group select:focus {
+                outline: none;
+                border-color: var(--accent-primary);
+                box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.2);
             }
             .btn {
-                background: #667eea;
+                background-color: var(--success-color);
                 color: white;
-                border: none;
-                padding: 12px 24px;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                padding: 0.75rem 1.5rem;
                 border-radius: 6px;
                 cursor: pointer;
                 font-size: 1em;
+                font-weight: 500;
                 text-decoration: none;
                 display: inline-block;
-                transition: all 0.3s ease;
+                transition: background-color 0.2s ease;
             }
             .btn:hover {
-                background: #5a67d8;
-                transform: translateY(-2px);
+                background-color: #2ea043;
             }
-            .feature-highlight {
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                color: white;
-                padding: 30px;
-                border-radius: 15px;
-                margin: 30px 0;
-                text-align: center;
+            #preview {
+                margin-top: 2rem;
+            }
+            #badgeUrl {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 6px;
+                margin-top: 1.5rem;
+                word-break: break-all;
+                font-family: var(--font-mono);
+                color: var(--text-secondary);
+                border: 1px solid var(--border-color);
             }
             .features-list {
-                display: grid;
                 grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                gap: 15px;
-                margin: 20px 0;
             }
             .feature-item {
-                background: rgba(255,255,255,0.1);
-                padding: 15px;
-                border-radius: 8px;
-                backdrop-filter: blur(10px);
+                background-color: var(--bg-color);
+                padding: 1rem;
+                border-radius: 6px;
+                border: 1px solid var(--border-color);
+                text-align: center;
             }
             .footer {
                 text-align: center;
-                padding: 40px 20px;
-                background: #2c3e50;
-                color: white;
-                margin: 40px -20px -20px -20px;
-                border-radius: 0 0 15px 15px;
+                padding: 3rem 1rem;
+                margin-top: 3rem;
+                border-top: 1px solid var(--border-color);
+                color: var(--text-secondary);
             }
             @media (max-width: 768px) {
-                .container {
-                    padding: 10px;
-                }
-                .header h1 {
-                    font-size: 2em;
-                }
-                .examples-grid {
-                    grid-template-columns: 1fr;
-                }
-                .input-group {
-                    flex-direction: column;
-                    align-items: center;
-                }
+                .header h1 { font-size: 2.5rem; }
+                .header p { font-size: 1.1rem; }
             }
         </style>
     </head>
     <body>
         <div class="container">
             <header class="header">
-                <h1>🏆 GitHub Commit Badge API</h1>
-                <p>Generate beautiful, customizable badges showing GitHub commit activity with advanced theming, animations, and visual enhancements!</p>
+                <h1>GitHub Commit Badge API</h1>
+                <p>Generate beautiful, customizable badges for your GitHub commit activity with advanced theming, animations, and visual enhancements.</p>
             </header>
 
-            <div class="section quick-start">
+            <div class="section">
                 <h2>🚀 Quick Start</h2>
-                <p>Get started in seconds! Just replace <strong>USERNAME</strong> with any GitHub username:</p>
+                <p>Embed the badge in your Markdown. Just replace <code>USERNAME</code> with any GitHub username:</p>
                 <div class="code-block">${req.protocol}://${req.get('host')}/commits?account=USERNAME</div>
-                <p><strong>Example:</strong></p>
-                <code>${req.protocol}://${req.get('host')}/commits?account=octocat</code>
-                <br><br>
-                <img src="/commits?account=octocat" alt="Basic example" style="box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 4px;">
+                <p><strong>Live Example for <code>octocat</code>:</strong></p>
+                <img src="/commits?account=octocat" alt="Basic example">
             </div>
 
-            <div class="feature-highlight">
-                <h2>✨ Key Features</h2>
-                <div class="features-list">
-                    <div class="feature-item">📊 <strong>Multiple Periods</strong><br>Week, Month, Quarter, Half, Year</div>
-                    <div class="feature-item">🎨 <strong>9 Themes</strong><br>Dark, Gradient, Neon & More</div>
-                    <div class="feature-item">🌈 <strong>10 Colors</strong><br>Red, Green, Blue, Purple & More</div>
-                    <div class="feature-item">🎭 <strong>4 Styles</strong><br>Flat, Square, Plastic, Badge</div>
-                    <div class="feature-item">⚡ <strong>Animations</strong><br>Pulse, Glow, Slide Effects</div>
-                    <div class="feature-item">🚀 <strong>Icons</strong><br>Fire, Rocket, Trophy & More</div>
-                    <div class="feature-item">📈 <strong>Sparklines</strong><br>Mini Trend Charts</div>
-                    <div class="feature-item">⚡ <strong>Smart Caching</strong><br>6-hour Performance Cache</div>
-                </div>
-            </div>
-
-            <div class="try-it">
-                <h3>🎮 Interactive Badge Builder</h3>
-                <p>Customize your badge in real-time!</p>
+            <div class="section try-it">
+                <h2>🎮 Interactive Badge Builder</h2>
+                <p>Customize your badge in real-time and generate the URL.</p>
                 <div class="input-group">
                     <input type="text" id="username" placeholder="GitHub Username" value="octocat">
                     <select id="period">
@@ -814,67 +794,71 @@ app.get('/', (req, res) => {
                         <option value="chart">📈 Chart</option>
                     </select>
                 </div>
-                <button class="btn" onclick="updatePreview()">🎨 Generate Badge</button>
-                <div id="preview" style="margin: 20px 0; min-height: 50px;">
+                <button class="btn" onclick="updatePreview()">Generate Badge</button>
+                <div id="preview">
                     <img id="previewImg" src="/commits?account=octocat" alt="Preview">
                 </div>
-                <div id="badgeUrl" style="background: rgba(0,0,0,0.1); padding: 15px; border-radius: 6px; margin-top: 15px; word-break: break-all; font-family: monospace;"></div>
+                <div id="badgeUrl"></div>
             </div>
 
             <div class="section">
-                <h2>📋 Complete Parameter Reference</h2>
+                <h2>✨ Key Features</h2>
+                <div class="features-list">
+                    <div class="feature-item">📊 Multiple Periods</div>
+                    <div class="feature-item">🎨 9+ Themes</div>
+                    <div class="feature-item">🌈 10+ Colors</div>
+                    <div class="feature-item">🎭 4 Styles</div>
+                    <div class="feature-item">⚡ Animations</div>
+                    <div class="feature-item">🚀 Icons</div>
+                    <div class="feature-item">📈 Sparklines</div>
+                    <div class="feature-item">⚡ Smart Caching</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>📋 Parameter Reference</h2>
                 <div class="params-grid">
                     <div class="param-card">
-                        <h4>🔧 Core Parameters</h4>
-                        <p><span class="param-name">account</span> - GitHub username (required)</p>
-                        <p><span class="param-name">period</span> - Time range: week, month, quarter, half, year</p>
+                        <h4>🔧 Core</h4>
+                        <p><span class="param-name">account</span> (required)</p>
+                        <p><span class="param-name">period</span></p>
                     </div>
                     <div class="param-card">
-                        <h4>🎨 Visual Parameters</h4>
-                        <p><span class="param-name">theme</span> - Badge theme (9 available)</p>
-                        <p><span class="param-name">color</span> - Custom color override</p>
-                        <p><span class="param-name">style</span> - Badge style (4 available)</p>
+                        <h4>🎨 Visuals</h4>
+                        <p><span class="param-name">theme</span></p>
+                        <p><span class="param-name">color</span></p>
+                        <p><span class="param-name">style</span></p>
                     </div>
                     <div class="param-card">
-                        <h4>⚡ Enhancement Parameters</h4>
-                        <p><span class="param-name">animated</span> - Animation type</p>
-                        <p><span class="param-name">icon</span> - Emoji icon to display</p>
-                        <p><span class="param-name">sparkline</span> - Show mini chart (true/false)</p>
-                        <p><span class="param-name">border</span> - Add border (true/false)</p>
+                        <h4>⚡ Enhancements</h4>
+                        <p><span class="param-name">animated</span></p>
+                        <p><span class="param-name">icon</span></p>
+                        <p><span class="param-name">sparkline</span></p>
+                        <p><span class="param-name">border</span></p>
                     </div>
                 </div>
             </div>
 
             <div class="section">
-                <h2>🎨 Theme Gallery</h2>
+                <h2>🎨 Theme & Style Gallery</h2>
                 <div class="examples-grid">
                     <div class="example-card">
-                        <h4>🌟 Default Theme</h4>
-                        <img src="/commits?account=octocat&theme=default" alt="Default theme">
-                        <div class="code-block">?theme=default</div>
-                    </div>
-                    <div class="example-card">
-                        <h4>🌙 Dark Theme</h4>
-                        <img src="/commits?account=octocat&theme=dark&icon=fire" alt="Dark theme">
-                        <div class="code-block">?theme=dark&icon=fire</div>
-                    </div>
-                    <div class="example-card">
-                        <h4>🧛 Dracula Theme</h4>
+                        <h4>Dracula Theme</h4>
                         <img src="/commits?account=octocat&theme=dracula&icon=rocket" alt="Dracula theme">
                         <div class="code-block">?theme=dracula&icon=rocket</div>
                     </div>
                     <div class="example-card">
-                        <h4>🌈 Gradient Theme</h4>
+                        <h4>Gradient with Sparkline</h4>
                         <img src="/commits?account=octocat&theme=gradient&sparkline=true" alt="Gradient theme">
                         <div class="code-block">?theme=gradient&sparkline=true</div>
                     </div>
                     <div class="example-card">
-                        <h4>💚 Neon Theme</h4>
+                        <h4>Neon Glow Animation</h4>
                         <img src="/commits?account=octocat&theme=neon&animated=glow" alt="Neon theme">
                         <div class="code-block">?theme=neon&animated=glow</div>
                     </div>
                     <div class="example-card">
-                        <h4>🌊 Ocean Theme</h4>
+                        <h4>"For The Badge" Style</h4>
                         <img src="/commits?account=octocat&theme=ocean&style=for-the-badge" alt="Ocean theme">
                         <div class="code-block">?theme=ocean&style=for-the-badge</div>
                     </div>
@@ -882,133 +866,56 @@ app.get('/', (req, res) => {
             </div>
 
             <div class="section">
-                <h2>🚀 Advanced Examples</h2>
-                <div class="examples-grid">
-                    <div class="example-card">
-                        <h4>🏆 Achievement Style</h4>
-                        <img src="/commits?account=octocat&style=for-the-badge&icon=trophy&color=purple&animated=pulse" alt="Achievement style">
-                        <div class="code-block">?style=for-the-badge&icon=trophy&color=purple&animated=pulse</div>
-                    </div>
-                    <div class="example-card">
-                        <h4>📈 Analytics Style</h4>
-                        <img src="/commits?account=octocat&theme=monokai&sparkline=true&icon=chart&period=quarter" alt="Analytics style">
-                        <div class="code-block">?theme=monokai&sparkline=true&icon=chart&period=quarter</div>
-                    </div>
-                    <div class="example-card">
-                        <h4>🔥 Streamer Style</h4>
-                        <img src="/commits?account=octocat&theme=sunset&animated=slide&icon=fire&style=plastic" alt="Streamer style">
-                        <div class="code-block">?theme=sunset&animated=slide&icon=fire&style=plastic</div>
-                    </div>
-                    <div class="example-card">
-                        <h4>💎 Premium Style</h4>
-                        <img src="/commits?account=octocat&theme=gradient&style=for-the-badge&sparkline=true&animated=glow&icon=star" alt="Premium style">
-                        <div class="code-block">?theme=gradient&style=for-the-badge&sparkline=true&animated=glow&icon=star</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="section">
                 <h2>📝 Markdown Usage</h2>
-                <p>Copy and paste these examples into your README.md files:</p>
+                <p>Copy and paste into your README.md files:</p>
                 <div class="code-block">
-<!-- Basic usage -->
+# Basic
 ![Daily Commits](${req.protocol}://${req.get('host')}/commits?account=yourusername)
 
-<!-- Themed badge -->
+# Themed
 ![Commits](${req.protocol}://${req.get('host')}/commits?account=yourusername&theme=dark&icon=fire)
-
-<!-- Complete dashboard -->
-| Period | Badge |
-|--------|-------|
-| Week | ![Week](${req.protocol}://${req.get('host')}/commits?account=yourusername&period=week&theme=dark) |
-| Month | ![Month](${req.protocol}://${req.get('host')}/commits?account=yourusername&period=month&theme=gradient) |
-| Year | ![Year](${req.protocol}://${req.get('host')}/commits?account=yourusername&period=year&theme=neon) |
-                </div>
-            </div>
-
-            <div class="section">
-                <h2>⚡ Performance & Caching</h2>
-                <div class="params-grid">
-                    <div class="param-card">
-                        <h4>🏎️ Fast Response Times</h4>
-                        <p>6-hour intelligent caching system ensures lightning-fast badge loading while keeping data fresh.</p>
-                    </div>
-                    <div class="param-card">
-                        <h4>🛡️ Error Resilience</h4>
-                        <p>Graceful fallback to cached data during GitHub API issues. Always shows a badge, never breaks your README.</p>
-                    </div>
-                    <div class="param-card">
-                        <h4>📊 GitHub API Optimized</h4>
-                        <p>Respects GitHub rate limits with smart request batching and authenticated API access.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="section">
-                <h2>🔗 API Endpoints</h2>
-                <div class="code-block">
-GET ${req.protocol}://${req.get('host')}/commits
-    ?account=<username>          # Required: GitHub username
-    &period=<week|month|quarter|half|year>  # Optional: Time period
-    &theme=<theme_name>          # Optional: Visual theme
-    &color=<color_name>          # Optional: Custom color
-    &style=<style_name>          # Optional: Badge style
-    &animated=<animation_type>   # Optional: Animation
-    &icon=<icon_name>            # Optional: Emoji icon
-    &sparkline=<true|false>      # Optional: Mini chart
-    &border=<true|false>         # Optional: Border
                 </div>
             </div>
 
             <footer class="footer">
-                <h3>🚀 Ready to Enhance Your GitHub Profile?</h3>
-                <p>Start using these beautiful commit badges in your repositories today!</p>
-                <br>
-                <p>Made with ❤️ for the GitHub community | Powered by GitHub GraphQL API</p>
-                <p style="margin-top: 20px; opacity: 0.8;">
-                    <strong>Pro Tip:</strong> Bookmark this page for easy access to all parameters and examples!
-                </p>
+                <p>Powered by the GitHub GraphQL API | Made for the developer community</p>
             </footer>
         </div>
 
         <script>
             function updatePreview() {
-                const username = document.getElementById('username').value || 'octocat';
+                const username = document.getElementById('username').value.trim() || 'octocat';
+                const params = new URLSearchParams();
+                params.set('account', username);
+
                 const period = document.getElementById('period').value;
+                if (period) params.set('period', period);
+
                 const theme = document.getElementById('theme').value;
+                if (theme) params.set('theme', theme);
+
                 const style = document.getElementById('style').value;
-                const animated = document.getElementById('animated').value;
-                const icon = document.getElementById('icon').value;
+                if (style) params.set('style', style);
                 
-                let url = '/commits?account=' + encodeURIComponent(username);
-                if (period !== 'month') url += '&period=' + period;
-                if (theme !== 'default') url += '&theme=' + theme;
-                if (style !== 'flat') url += '&style=' + style;
-                if (animated) url += '&animated=' + animated;
-                if (icon) url += '&icon=' + icon;
+                const animated = document.getElementById('animated').value;
+                if (animated) params.set('animated', animated);
+
+                const icon = document.getElementById('icon').value;
+                if (icon) params.set('icon', icon);
+
+                const url = '/commits?' + params.toString();
                 
                 document.getElementById('previewImg').src = url;
                 document.getElementById('badgeUrl').textContent = window.location.origin + url;
             }
             
-            // Update preview when dropdowns change
             document.querySelectorAll('select, input').forEach(element => {
                 element.addEventListener('change', updatePreview);
             });
             
-            // Initialize
-            updatePreview();
+            document.getElementById('username').addEventListener('keyup', updatePreview);
             
-            // Add some interactive hover effects
-            document.querySelectorAll('.example-card').forEach(card => {
-                card.addEventListener('mouseenter', function() {
-                    this.style.transform = 'translateY(-5px)';
-                    this.style.transition = 'all 0.3s ease';
-                });
-                card.addEventListener('mouseleave', function() {
-                    this.style.transform = 'translateY(0)';
-                });
-            });
+            window.onload = updatePreview;
         </script>
     </body>
     </html>
