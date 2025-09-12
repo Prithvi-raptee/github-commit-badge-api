@@ -9,7 +9,7 @@ const THEMES = {
   gradient: { labelBg: 'url(#grad1)', valueBg: 'url(#grad2)', textColor: '#fff', borderColor: 'none' },
   ocean: { labelBg: '#0f4c75', valueBg: '#3282b8', textColor: '#bbe1fa', borderColor: '#0f3460' },
   sunset: { labelBg: '#ff6b6b', valueBg: '#ffa726', textColor: '#fff', borderColor: '#ff5722' },
-  neon: { labelBg: '#0a0a0a', valueBg: '#00ff41', textColor: '#00ff41', borderColor: '#00ff41' }
+  neon: { labelBg: '#0a0a0a', valueBg: '#00ff41', textColor: '#fff', borderColor: '#00ff41' }
 };
 
 const COLORS = {

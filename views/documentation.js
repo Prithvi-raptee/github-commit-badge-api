@@ -161,7 +161,7 @@ const getDocumentationHTML = (req) => {
             </section>
 
             <footer class="footer">
-                <p>Made with <span class="heart">♥</span> by <a href="https://github.com/Prithvi-raptee" class="footer-link" style="text-decoration:none; color: #a6e22e;">8bitSaiyan</a> for the developer community.</p>
+                        Made with <span class="heart">❤️</span> by <a href="https://github.com/Prithvi-raptee" class="footer-link" style="color: var(--warning-500); font-weight: 500;" target="_blank" rel="noopener noreferrer">8bitSaiyan</a> for the developer community
             </footer>
         </div>
 

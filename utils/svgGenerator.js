@@ -73,14 +73,19 @@ const generateAnimations = (animated, style) => {
 };
 
 const generateSparkline = (data, width, height) => {
-  if (!data || data.length < 2) return '';
+  // Add proper type checking to prevent the spread operator error
+  if (!data || !Array.isArray(data) || data.length < 2) return '';
   
-  const max = Math.max(...data);
-  const min = Math.min(...data);
+  // Additional validation to ensure all elements are numbers
+  const numericData = data.filter(item => typeof item === 'number' && !isNaN(item));
+  if (numericData.length < 2) return '';
+  
+  const max = Math.max(...numericData);
+  const min = Math.min(...numericData);
   const range = max - min || 1;
   
-  const points = data.map((value, index) => {
-    const x = (index / (data.length - 1)) * width;
+  const points = numericData.map((value, index) => {
+    const x = (index / (numericData.length - 1)) * width;
     const y = height - ((value - min) / range) * height;
     return `${x},${y}`;
   }).join(' ');
@@ -128,17 +133,18 @@ const generateEnhancedSvgBadge = (label, value, options = {}) => {
     const labelText = `${iconText ? iconText + ' ' : ''}Daily Commits (${label})`;
     const valueText = value;
 
-    // Enhanced width calculation
-    const baseCharWidth = styleConfig.fontSize === '11' ? 8.5 : 7.5;
-    const labelWidth = Math.max(labelText.length * baseCharWidth, 80);
-    const valueWidth = Math.max(valueText.toString().length * (baseCharWidth + 1) + 20, 50);
+    // --- Dynamic text width calculation ---
+    const isForBadge = styleConfig.fontSize === '11';
+    const baseCharWidth = isForBadge ? 6 : 5.5; // Reduced width multipliers
+    const valueCharWidth = isForBadge ? 6.5 : 6; // Reduced width multipliers
+
+    const labelWidth = Math.max(labelText.length * baseCharWidth + 16, 80);
+    const valueWidth = Math.max(valueText.toString().length * valueCharWidth + 16, 40);
     const totalWidth = labelWidth + valueWidth;
 
     const gradients = generateGradients(theme);
     const animations = generateAnimations(animated, style);
     const sparklineChart = sparkline ? generateSparkline(sparkline, valueWidth - 10, styleConfig.height - 8) : '';
-
-    // Border styling
     const borderStyle = showBorder || themeColors.borderColor !== 'none' ? 
       `stroke="${themeColors.borderColor}" stroke-width="1"` : '';
 
@@ -147,73 +153,40 @@ const generateEnhancedSvgBadge = (label, value, options = {}) => {
         <title>${labelText}: ${valueText}</title>
         ${gradients}
         ${animations}
-        
         <linearGradient id="s" x2="0" y2="100%">
             <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>
             <stop offset="1" stop-opacity=".1"/>
         </linearGradient>
-        
         <clipPath id="r">
             <rect width="${totalWidth}" height="${styleConfig.height}" rx="${styleConfig.borderRadius}" fill="#fff"/>
         </clipPath>
-        
         <g clip-path="url(#r)">
             <rect width="${labelWidth}" height="${styleConfig.height}" fill="${themeColors.labelBg}" ${borderStyle}/>
             <rect x="${labelWidth}" width="${valueWidth}" height="${styleConfig.height}" fill="${themeColors.valueBg}" ${borderStyle}/>
             ${styleConfig.shadow ? `<rect width="${totalWidth}" height="${styleConfig.height}" fill="url(#s)"/>` : ''}
         </g>
-        
-        ${sparklineChart ? `
-        <g transform="translate(${labelWidth + 5}, 4)" color="${themeColors.textColor}">
-            ${sparklineChart}
-        </g>` : ''}
-        
+        ${sparklineChart ? `<g transform="translate(${labelWidth + 5}, 4)" color="${themeColors.textColor}">${sparklineChart}</g>` : ''}
         <g fill="${themeColors.textColor}" 
            text-anchor="middle" 
-           font-family="${styleConfig.fontSize === '11' ? 'Trebuchet MS,sans-serif' : 'Verdana,Geneva,DejaVu Sans,sans-serif'}" 
+           font-family="${isForBadge ? 'Trebuchet MS,sans-serif' : 'Verdana,Geneva,DejaVu Sans,sans-serif'}" 
            text-rendering="geometricPrecision" 
            font-size="${styleConfig.fontSize || '110'}"
-           ${styleConfig.textTransform ? `style="text-transform: ${styleConfig.textTransform}; letter-spacing: ${styleConfig.letterSpacing || '0'}"` : ''}
-           ${animated ? `class="${animated}"` : ''}>
-           
-            <text aria-hidden="true" 
-                  x="${labelWidth * 5}" 
-                  y="150" 
-                  fill="#010101" 
-                  fill-opacity=".3" 
-                  transform="scale(.1)" 
-                  textLength="${(labelWidth - 10) * 10}">
-                ${labelText}
-            </text>
-            <text x="${labelWidth * 5}" 
-                  y="140" 
-                  transform="scale(.1)" 
-                  fill="${themeColors.textColor}" 
-                  textLength="${(labelWidth - 10) * 10}">
-                ${labelText}
-            </text>
+           ${styleConfig.textTransform ? `style="text-transform: ${styleConfig.textTransform}; letter-spacing: ${styleConfig.letterSpacing || '0'}"` : ''}>
+            <text aria-hidden="true" x="${labelWidth / 2 * 10}" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)">${labelText}</text>
+            <text x="${labelWidth / 2 * 10}" y="140" transform="scale(.1)" fill="${themeColors.textColor}">${labelText}</text>
             
-            <text aria-hidden="true" 
-                  x="${(labelWidth + valueWidth / 2) * 10}" 
-                  y="150" 
-                  fill="#010101" 
-                  fill-opacity=".3" 
-                  transform="scale(.1)" 
-                  textLength="${(valueWidth - 10) * 10}">
-                ${valueText}
-            </text>
-            <text x="${(labelWidth + valueWidth / 2) * 10}" 
-                  y="140" 
-                  transform="scale(.1)" 
-                  fill="${themeColors.textColor}" 
-                  textLength="${(valueWidth - 10) * 10}">
-                ${valueText}
-            </text>
+            <text aria-hidden="true" x="${(labelWidth + valueWidth / 2) * 10}" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)">${valueText}</text>
+            <text x="${(labelWidth + valueWidth / 2) * 10}" y="140" transform="scale(.1)" fill="${themeColors.textColor}">${valueText}</text>
         </g>
     </svg>
     `;
 };
 
-const errorBadge = (message, options = {}) => generateEnhancedSvgBadge("error", message, options);
+const errorBadge = (message, options = {}) => {
+  // Ensure sparkline is not passed to error badges to prevent the crash
+  const safeOptions = { ...options };
+  delete safeOptions.sparkline; // Remove sparkline option for error badges
+  return generateEnhancedSvgBadge("error", message, safeOptions);
+};
 
 module.exports = { generateEnhancedSvgBadge, errorBadge };
