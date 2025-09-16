@@ -1,5 +1,3 @@
-// api/index.js
-
 const express = require('express');
 const { ensureCacheDir, cache } = require('../utils/cache');
 const { fetchAndCalculateAverage } = require('../utils/github');
@@ -12,29 +10,27 @@ const app = express();
 
 // --- API Endpoint ---
 app.get('/commits', async (req, res) => {
-    // FIX: Destructure 'theme' from req.query so it's available as a variable
     const { account, period = 'month', theme = 'default', ...options } = req.query;
 
-    // This custom event will now work correctly
+    if (!account) {
+        return res.status(400).send('Missing GitHub account parameter.');
+    }
+
     track('Badge Generated', { 
         account: account, 
         period: period,
         theme: theme 
     });
 
-    if (!account) {
-        return res.status(400).send('Missing GitHub account parameter.');
-    }
-
     const validPeriods = ['week', 'month', 'quarter', 'half', 'year'];
     const selectedPeriod = validPeriods.includes(period) ? period : 'month';
     const cacheKey = `${account}:${selectedPeriod}`;
 
     const badgeOptions = {
-      ...options,
-      theme, // Pass the theme to your badge generator
-      sparkline: options.sparkline === 'true' || options.sparkline === '1',
-      showBorder: options.border === 'true' || options.border === '1'
+        ...options,
+        theme,
+        sparkline: options.sparkline === 'true' || options.sparkline === '1',
+        showBorder: options.border === 'true' || options.border === '1'
     };
 
     res.setHeader('Content-Type', 'image/svg+xml');
