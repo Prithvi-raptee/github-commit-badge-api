@@ -68,7 +68,7 @@ const getDocumentationHTML = (req) => {
                 border-radius: 50%;
                 background: radial-gradient(circle, hsla(217, 91%, 59%, 0.1), transparent 70%);
                 pointer-events: none;
-                transform: translate(-50%, -50%); /* Initial position off-screen */
+                transform: translate(-50%, -50%);
                 z-index: 0;
                 transition: width 0.3s ease, height 0.3s ease, background 0.3s ease;
             }
@@ -267,13 +267,21 @@ const getDocumentationHTML = (req) => {
             .card img { margin: auto 0 1.5rem; }
             .card .code-snippet { margin-top: auto; padding: 0.75rem; font-size: 0.8rem; background: var(--background); }
             
-            /* Footer */
             .footer {
                 text-align: center;
                 padding: 4rem 0 2rem;
                 color: var(--muted-foreground);
-                font-size: 0.9rem;
+                font-size: 1rem;
+                border-top: 1px solid var(--border);
+                margin-top: 4rem;
             }
+            .footer p { margin-bottom: 0.5rem; }
+            .footer .cta {
+                margin-top: 1.5rem;
+                font-size: 0.875rem;
+                color: var(--muted-foreground);
+            }
+            .footer .cta p { line-height: 1.6; }
 
             /* Scroll Animation */
             .fade-in-section {
@@ -451,7 +459,19 @@ const getDocumentationHTML = (req) => {
                 </section>
 
                 <footer class="footer fade-in-section">
-                    <p>Built for the open-source community.</p>
+                    <p>
+                        Made with ❤️ by <a href="https://github.com/Prithvi-raptee" target="_blank" rel="noopener noreferrer">8bitSaiyan</a> for the open source community.
+                    </p>
+                    <div class="cta">
+                        <p>
+                            Digging this? The whole thing lives on <a href="https://github.com/Prithvi-raptee/github-commit-badge-api" target="_blank" rel="noopener noreferrer">GitHub</a>.
+                        </p>
+                        <p>
+                           If it made your README a little snazzier, a ⭐️ would be awesome!
+                           <br>
+                           Got ideas to make it even better? Fork it, break it, and send a PR. Go nuts.
+                        </p>
+                    </div>
                 </footer>
             </main>
         </div>
@@ -462,7 +482,6 @@ const getDocumentationHTML = (req) => {
                 const aura = document.querySelector('.cursor-aura');
                 if (aura) {
                     document.addEventListener('mousemove', (e) => {
-                        // --- FIX: Center the aura on the cursor by offsetting by half its size ---
                         aura.style.transform = \`translate(\${e.clientX - aura.offsetWidth / 2}px, \${e.clientY - aura.offsetHeight / 2}px)\`;
                     });
 
