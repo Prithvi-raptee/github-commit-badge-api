@@ -6,11 +6,21 @@ const { fetchAndCalculateAverage } = require('../utils/github');
 const { generateEnhancedSvgBadge, errorBadge } = require('../utils/svgGenerator');
 const { getDocumentationHTML } = require('../views/documentation');
 
+const { track } = require('@vercel/analytics/server');
+
 const app = express();
 
 // --- API Endpoint ---
 app.get('/commits', async (req, res) => {
-    const { account, period = 'month', ...options } = req.query;
+    // FIX: Destructure 'theme' from req.query so it's available as a variable
+    const { account, period = 'month', theme = 'default', ...options } = req.query;
+
+    // This custom event will now work correctly
+    track('Badge Generated', { 
+        account: account, 
+        period: period,
+        theme: theme 
+    });
 
     if (!account) {
         return res.status(400).send('Missing GitHub account parameter.');
@@ -22,6 +32,7 @@ app.get('/commits', async (req, res) => {
 
     const badgeOptions = {
       ...options,
+      theme, // Pass the theme to your badge generator
       sparkline: options.sparkline === 'true' || options.sparkline === '1',
       showBorder: options.border === 'true' || options.border === '1'
     };
@@ -36,7 +47,7 @@ app.get('/commits', async (req, res) => {
             const newData = await fetchAndCalculateAverage(account, selectedPeriod);
             
             if (newData.error) {
-                const oldCache = await cache.get(cacheKey); // Attempt to use stale cache on error
+                const oldCache = await cache.get(cacheKey);
                 if (oldCache) {
                     return res.send(generateEnhancedSvgBadge(selectedPeriod, oldCache.average, {...badgeOptions, sparkline: badgeOptions.sparkline ? oldCache.sparklineData : null}));
                 }
@@ -60,12 +71,11 @@ app.get('/commits', async (req, res) => {
     }
 });
 
-// Test route to verify server is working
+// --- Other Routes ---
 app.get('/test', (req, res) => {
     res.send('<h1>Test Route - Server is working!</h1>');
 });
 
-// --- Documentation Route ---
 app.get('/', (req, res) => {
     try {
         const html = getDocumentationHTML(req);
@@ -77,8 +87,7 @@ app.get('/', (req, res) => {
     }
 });
 
-// Vercel handles the server creation, so we just export the app.
-// For local development, you might uncomment the below block.
+// --- Server Startup ---
 const PORT = process.env.PORT || 3000;
 ensureCacheDir().then(() => {
     app.listen(PORT, () => {
