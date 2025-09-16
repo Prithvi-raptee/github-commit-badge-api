@@ -2,6 +2,8 @@
 
 A powerful, customizable API that generates beautiful SVG badges displaying GitHub commit activity with advanced theming, animations, and visual enhancements.
 
+🔗 **Interactive Documentation & Badge Builder:** [Try it out!](https://github-commit-badge-api.vercel.app/)
+
 ## ✨ Features
 
 - 📊 **Multiple Time Periods** - Week, month, quarter, half-year, year
@@ -13,6 +15,18 @@ A powerful, customizable API that generates beautiful SVG badges displaying GitH
 - 📈 **Mini Sparklines** - Embedded commit trend charts
 - ⚡ **Smart Caching** - 6-hour cache for optimal performance
 - 🛡️ **Error Resilience** - Graceful fallback and error handling
+
+## 🎨 Badge Builder
+
+Create the perfect badge with our interactive builder:
+
+[![Open in Badge Builder](https://img.shields.io/badge/Open%20in%20Badge%20Builder-4f46e5?style=for-the-badge&logo=github&logoColor=white)](https://github-commit-badge-api.vercel.app/)
+
+Our Badge Builder lets you:
+- Preview different themes and styles in real-time
+- Customize all parameters with a user-friendly interface
+- Copy the generated URL with a single click
+- See live previews of your badge
 
 ## 🚀 Quick Start
 
@@ -43,7 +57,7 @@ GET /commits
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `account` | string | **required** | GitHub username |
-| `period` | string | `month` | Time period: `week`, `month`, `quarter`, `half`, `year` |
+| `period` | string | `month` | Time period: `week`, `month`, `quarter`, `half`, `year` (half = last 6 months) |
 | `theme` | string | `default` | Badge theme (see themes below) |
 | `color` | string | - | Custom color (see colors below) |
 | `style` | string | `flat` | Badge style (see styles below) |
@@ -189,6 +203,7 @@ Create a comprehensive activity dashboard:
 | Weekly | ![Weekly](https://github-commit-badge-api.vercel.app//commits?account=YOUR_USERNAME&period=week&theme=dark&icon=calendar) |
 | Monthly | ![Monthly](https://github-commit-badge-api.vercel.app//commits?account=YOUR_USERNAME&period=month&theme=gradient&icon=chart) |
 | Quarterly | ![Quarterly](https://github-commit-badge-api.vercel.app//commits?account=YOUR_USERNAME&period=quarter&theme=ocean&icon=rocket) |
+| Half Yearly | ![Half Yearly](https://github-commit-badge-api.vercel.app//commits?account=YOUR_USERNAME&period=half&theme=purple&icon=calendar) |
 | Yearly | ![Yearly](https://github-commit-badge-api.vercel.app//commits?account=YOUR_USERNAME&period=year&theme=sunset&icon=trophy) |
 
 ## 🔥 Trending Activity
@@ -196,6 +211,18 @@ Create a comprehensive activity dashboard:
 ```
 
 > **💡 Remember:** Replace `YOUR_USERNAME` with your actual GitHub username in all examples!
+
+## 📊 Understanding Commit Periods
+
+Our API provides several time periods for tracking commit activity:
+
+- **Weekly**: Last 7 days of activity
+- **Monthly**: Last 30 days of activity
+- **Quarterly**: Last 90 days of activity
+- **Half Yearly**: Last 180 days of activity
+- **Yearly**: Last 365 days of activity
+
+Each period shows the average commits per day, giving you a clear picture of your coding habits over different timeframes.
 
 ## 🚀 Deployment
 
