@@ -60,11 +60,21 @@ app.get('/commits', async (req, res) => {
     }
 });
 
+// Test route to verify server is working
+app.get('/test', (req, res) => {
+    res.send('<h1>Test Route - Server is working!</h1>');
+});
+
 // --- Documentation Route ---
 app.get('/', (req, res) => {
-    const html = getDocumentationHTML(req);
-    res.setHeader('Content-Type', 'text/html');
-    res.send(html);
+    try {
+        const html = getDocumentationHTML(req);
+        res.setHeader('Content-Type', 'text/html');
+        res.send(html);
+    } catch (error) {
+        console.error('Error generating documentation:', error);
+        res.status(500).send('<h1>Error generating documentation</h1><p>' + error.message + '</p>');
+    }
 });
 
 // Vercel handles the server creation, so we just export the app.

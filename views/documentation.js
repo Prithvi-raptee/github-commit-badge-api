@@ -1,5 +1,3 @@
-// views/documentation.js
-
 const getDocumentationHTML = (req) => {
     const baseUrl = `${req.protocol}://${req.get('host')}`;
 
@@ -12,187 +10,536 @@ const getDocumentationHTML = (req) => {
         <title>GitHub Commit Badge API | Professional Badge Generator</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
         <style>
             :root {
-                --primary-900: #0f172a; --primary-800: #1e293b; --primary-700: #334155;
-                --primary-600: #475569; --primary-500: #64748b; --primary-400: #94a3b8;
-                --primary-300: #cbd5e1; --primary-200: #e2e8f0; --primary-100: #f1f5f9;
-                --primary-50: #f8fafc; --accent-500: #3b82f6; --accent-600: #2563eb;
-                --font-sans: 'Inter', sans-serif; --font-mono: 'JetBrains Mono', monospace;
-                --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-                --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-                --border-radius: 8px; --border-radius-lg: 12px; --border-radius-xl: 16px;
+                /* Shadcn-inspired Matte Black Theme */
+                --background: hsl(240 10% 3.9%);
+                --foreground: hsl(210 20% 98%);
+                --card: hsl(240 5.9% 10%);
+                --border: hsl(240 3.7% 15.9%);
+                --input: hsl(240 3.7% 15.9%);
+                
+                --primary: hsl(217.2 91.2% 59.8%);
+                --primary-foreground: hsl(210 20% 98%);
+                
+                --secondary: hsl(240 3.7% 15.9%);
+                --secondary-foreground: hsl(210 20% 98%);
+                
+                --muted: hsl(240 3.7% 15.9%);
+                --muted-foreground: hsl(240 5% 64.9%);
+
+                --ring: hsl(217.2 91.2% 59.8%);
+                --radius: 0.75rem;
+                
+                --font-sans: 'Inter', sans-serif;
+                --font-mono: 'JetBrains Mono', monospace;
             }
-            * { margin: 0; padding: 0; box-sizing: border-box; }
-            html { scroll-behavior: smooth; }
-            body { font-family: var(--font-sans); line-height: 1.7; color: var(--primary-100); background: var(--primary-900); }
-            .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
-            .header { padding: 4rem 0 3rem; text-align: center; }
-            .header::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 100px; height: 4px; background: var(--accent-500); border-radius: 2px; }
-            .header h1 { font-size: 2.75rem; color: var(--primary-50); margin-bottom: 1rem; }
-            .header .subtitle { font-size: 1.25rem; color: var(--primary-300); max-width: 600px; margin: 0 auto; }
-            .nav { background: rgba(30, 41, 59, 0.8); border: 1px solid var(--primary-700); border-radius: var(--border-radius-lg); padding: 1rem; margin-bottom: 3rem; position: sticky; top: 1rem; z-index: 100; backdrop-filter: blur(12px); }
-            .nav-links { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; }
-            .nav-link { color: var(--primary-300); text-decoration: none; font-weight: 500; padding: 0.5rem 1rem; border-radius: var(--border-radius); transition: all 0.2s ease; }
-            .nav-link:hover { color: var(--accent-500); background: var(--primary-700); }
-            .section { margin-bottom: 4rem; background: var(--primary-800); border: 1px solid var(--primary-700); border-radius: var(--border-radius-xl); padding: 2.5rem; box-shadow: var(--shadow-lg); }
-            .section h2 { font-size: 2rem; color: var(--primary-50); margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid var(--primary-700); position: relative; }
-            .section h2::before { content: ''; position: absolute; bottom: -2px; left: 0; width: 60px; height: 2px; background: var(--accent-500); }
-            .section p { color: var(--primary-300); margin-bottom: 1.5rem; font-size: 1.05rem; }
-            .code-block { background: var(--primary-900); border: 1px solid var(--primary-600); border-radius: var(--border-radius-lg); padding: 1.5rem; font-family: var(--font-mono); font-size: 0.9rem; color: var(--primary-200); margin: 1.5rem 0; overflow-x: auto; }
-            .inline-code { background: var(--primary-700); color: var(--accent-500); padding: 0.25rem 0.5rem; border-radius: 4px; font-family: var(--font-mono); font-size: 0.9em; border: 1px solid var(--primary-600); }
-            .builder { background: var(--primary-900); border: 2px solid var(--accent-500); border-radius: var(--border-radius-xl); padding: 2rem; margin: 2rem 0; }
-            .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+            
+            /* Base & Reset */
+            *, *::before, *::after {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+            
+            html {
+                scroll-behavior: smooth;
+                scroll-padding-top: 8rem;
+            }
+
+            body {
+                background-color: var(--background);
+                color: var(--foreground);
+                font-family: var(--font-sans);
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                overflow-x: hidden;
+            }
+
+            /* Cursor Aura Effect */
+            .cursor-aura {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 400px;
+                height: 400px;
+                border-radius: 50%;
+                background: radial-gradient(circle, hsla(217, 91%, 59%, 0.1), transparent 70%);
+                pointer-events: none;
+                transform: translate(-50%, -50%); /* Initial position off-screen */
+                z-index: 0;
+                transition: width 0.3s ease, height 0.3s ease, background 0.3s ease;
+            }
+            
+            main {
+                position: relative;
+                z-index: 1;
+            }
+
+            /* Typography */
+            h1, h2, h3, h4, h5, h6 { line-height: 1.2; font-weight: 700; color: var(--foreground); }
+            h1 { font-size: 3.5rem; letter-spacing: -0.05em; }
+            h2 { font-size: 2.25rem; margin-bottom: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem; }
+            h3 { font-size: 1.5rem; margin-bottom: 1.5rem; }
+            p { color: var(--muted-foreground); margin-bottom: 1.25rem; line-height: 1.7; font-size: 1rem; }
+            a { color: var(--primary); text-decoration: none; transition: color 0.2s; }
+            a:hover { color: hsl(217.2 91.2% 69.8%); }
+            .inline-code {
+                font-family: var(--font-mono);
+                background: var(--muted);
+                padding: 0.2em 0.4em;
+                border-radius: 0.3rem;
+                font-size: 0.9em;
+                color: var(--foreground);
+            }
+
+            /* Layout */
+            .container {
+                max-width: 1024px;
+                margin: 0 auto;
+                padding: 0 1.5rem;
+            }
+
+            /* Header */
+            .header {
+                text-align: center;
+                padding: 6rem 0 4rem;
+            }
+            .header h1 {
+                background: linear-gradient(90deg, hsl(210 40% 98%), hsl(210 40% 70%));
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                font-weight: 800;
+            }
+            .header .subtitle {
+                max-width: 600px;
+                margin: 1.5rem auto 2.5rem;
+                font-size: 1.125rem;
+                color: var(--muted-foreground);
+            }
+            .header-buttons { display: flex; gap: 1rem; justify-content: center; }
+
+            /* Buttons */
+            .btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.5rem;
+                padding: 0.75rem 1.5rem;
+                border-radius: 0.5rem;
+                font-size: 0.95rem;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.2s;
+                border: 1px solid transparent;
+            }
+            .btn-primary {
+                background-color: var(--primary);
+                color: var(--primary-foreground);
+                border-color: var(--primary);
+            }
+            .btn-primary:hover { background-color: hsl(217.2 91.2% 55.8%); }
+            .btn-secondary {
+                background-color: var(--secondary);
+                color: var(--secondary-foreground);
+                border-color: var(--border);
+            }
+            .btn-secondary:hover { background-color: hsl(240 3.7% 20%); }
+
+            /* Navigation */
+            .nav {
+                position: sticky;
+                top: 1rem;
+                background: hsla(240, 10%, 4%, 0.5);
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+                z-index: 100;
+                margin: 1rem auto 3.5rem;
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+                max-width: 1024px;
+            }
+            .nav-container { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1.5rem; }
+            .nav-logo { font-size: 1.125rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; }
+            .nav-logo i { color: var(--primary); }
+            .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+            .nav-link { color: var(--muted-foreground); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+            .nav-link:hover { color: var(--foreground); }
+            .mobile-menu-button { display: none; background: transparent; border: none; color: var(--foreground); font-size: 1.5rem; cursor: pointer; }
+
+            /* Card / Section */
+            .section {
+                background: transparent;
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                padding: 2.5rem;
+                margin-bottom: 2rem;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+            
+            /* Code Blocks & Preview */
+            .code-block {
+                background: var(--background);
+                border: 1px solid var(--border);
+                border-radius: 0.5rem;
+                padding: 1rem;
+                font-family: var(--font-mono);
+                font-size: 0.9rem;
+                color: var(--muted-foreground);
+                margin-top: 1rem;
+                overflow-x: auto;
+                position: relative;
+            }
+            .preview { padding: 1.5rem; text-align: center; }
+            .preview img { max-width: 100%; height: auto; border-radius: 0.3rem; }
+
+            /* Builder & Forms */
+            .builder {
+                background: var(--card);
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                padding: 2rem;
+            }
+            .form-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 1.5rem;
+                margin-bottom: 2rem;
+            }
             .form-group { display: flex; flex-direction: column; }
-            .form-label { color: var(--primary-300); font-weight: 500; margin-bottom: 0.5rem; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; }
-            .form-input, .form-select { background: var(--primary-800); border: 1px solid var(--primary-600); border-radius: var(--border-radius); padding: 0.75rem; color: var(--primary-100); font-size: 1rem; font-family: inherit; }
-            .btn { background: var(--accent-500); color: white; border: none; padding: 1rem 2rem; border-radius: var(--border-radius); font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; text-decoration: none; }
-            .btn:hover { background: var(--accent-600); transform: translateY(-1px); box-shadow: var(--shadow-lg); }
-            .preview { background: var(--primary-700); border-radius: var(--border-radius-lg); padding: 2rem; text-align: center; margin: 2rem 0; }
-            .preview img { margin: 1rem 0; border-radius: var(--border-radius); box-shadow: var(--shadow-md); }
-            .url-display { background: var(--primary-900); border-radius: var(--border-radius); padding: 1rem; font-family: var(--font-mono); font-size: 0.85rem; color: var(--primary-300); word-break: break-all; margin-top: 1rem; }
-            .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
-            .card { background: var(--primary-700); border: 1px solid var(--primary-600); border-radius: var(--border-radius-lg); padding: 1.5rem; transition: all 0.3s ease; }
-            .card:hover { transform: translateY(-4px); border-color: var(--accent-500); box-shadow: var(--shadow-lg); }
-            .card h4 { color: var(--primary-50); font-size: 1.1rem; margin-bottom: 1rem; }
-            .card img { margin: 1rem 0; border-radius: var(--border-radius); max-width: 200px; }
-            .card .code-snippet { background: var(--primary-900); border-radius: var(--border-radius); padding: 0.75rem; font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-500); margin-top: 1rem; }
-            .params-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
-            .param-group { background: var(--primary-700); border-radius: var(--border-radius-lg); padding: 1.5rem; }
-            .param-group h4 { color: var(--accent-500); font-size: 1.1rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--primary-600); }
-            .param-item { display: flex; align-items: flex-start; gap: 0.75rem; margin: 0.75rem 0; }
-            .param-name { background: var(--primary-900); color: var(--accent-500); padding: 0.25rem 0.5rem; border-radius: 4px; font-family: var(--font-mono); font-size: 0.85rem; white-space: nowrap; }
-            .param-desc { color: var(--primary-300); font-size: 0.9rem; }
-            .footer { margin-top: 5rem; padding: 3rem 0; border-top: 2px solid var(--primary-700); text-align: center; color: var(--primary-400); }
-            .heart { color: #ef4444; animation: heartbeat 1.5s ease-in-out infinite; }
-            @keyframes heartbeat { 0%, 50%, 100% { transform: scale(1); } 25%, 75% { transform: scale(1.1); } }
+            .form-label {
+                font-size: 0.875rem;
+                font-weight: 500;
+                color: var(--muted-foreground);
+                margin-bottom: 0.5rem;
+            }
+            .form-input, .form-select {
+                background: var(--background);
+                border: 1px solid var(--input);
+                border-radius: 0.5rem;
+                padding: 0.65rem 1rem;
+                color: var(--foreground);
+                font-size: 0.95rem;
+                font-family: var(--font-sans);
+                transition: border-color 0.2s, box-shadow 0.2s;
+                width: 100%;
+            }
+            .form-input:focus, .form-select:focus {
+                outline: none;
+                border-color: var(--ring);
+                box-shadow: 0 0 0 1px var(--ring);
+            }
+            .url-display {
+                background: var(--background);
+                border: 1px solid var(--border);
+                border-radius: 0.5rem;
+                padding: 1rem;
+                font-family: var(--font-mono);
+                font-size: 0.85rem;
+                color: var(--muted-foreground);
+                word-break: break-all;
+                text-align: left;
+                cursor: pointer;
+                transition: background-color 0.2s;
+            }
+            .url-display:hover { background: var(--secondary); }
+            
+            /* Cards Grid (Examples) */
+            .cards-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 1.5rem;
+            }
+            .card {
+                background: var(--card);
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                padding: 1.5rem;
+                display: flex;
+                flex-direction: column;
+                transition: border-color 0.2s, transform 0.2s;
+            }
+            .card:hover { border-color: var(--primary); transform: translateY(-3px); }
+            .card h4 { font-size: 1.1rem; margin-bottom: 1rem; }
+            .card img { margin: auto 0 1.5rem; }
+            .card .code-snippet { margin-top: auto; padding: 0.75rem; font-size: 0.8rem; background: var(--background); }
+            
+            /* Footer */
+            .footer {
+                text-align: center;
+                padding: 4rem 0 2rem;
+                color: var(--muted-foreground);
+                font-size: 0.9rem;
+            }
+
+            /* Scroll Animation */
+            .fade-in-section {
+                opacity: 0;
+                transform: translateY(20px);
+                transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            }
+            .fade-in-section.is-visible {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            /* Responsive */
+            @media (max-width: 768px) {
+                h1 { font-size: 2.5rem; }
+                h2 { font-size: 1.75rem; }
+                .nav-links { display: none; }
+                .mobile-menu-button { display: block; }
+                .nav {
+                    top: 0;
+                    border-radius: 0;
+                    margin: 0 auto;
+                }
+                 .nav-links.active {
+                    display: flex;
+                    flex-direction: column;
+                    position: absolute;
+                    top: 100%;
+                    left: 0;
+                    right: 0;
+                    background: var(--card);
+                    padding: 1rem;
+                    border: 1px solid var(--border);
+                    border-top: none;
+                }
+            }
         </style>
     </head>
     <body>
+        <div class="cursor-aura"></div>
+        
+        <nav class="nav">
+            <div class="nav-container">
+                <a href="#" class="nav-logo"><i class="fas fa-chart-line"></i> Commit Badge API</a>
+                <ul class="nav-links">
+                    <li><a href="#quick-start" class="nav-link">Quick Start</a></li>
+                    <li><a href="#builder" class="nav-link">Builder</a></li>
+                    <li><a href="#parameters" class="nav-link">Parameters</a></li>
+                    <li><a href="#examples" class="nav-link">Examples</a></li>
+                </ul>
+                <button class="mobile-menu-button" aria-label="Toggle menu"><i class="fas fa-bars"></i></button>
+            </div>
+        </nav>
+
         <div class="container">
-            <header class="header">
+            <header class="header fade-in-section">
                 <h1>GitHub Commit Badge API</h1>
-                <p class="subtitle">Professional, customizable badges for showcasing your GitHub commit activity with advanced theming and visual enhancements.</p>
+                <p class="subtitle">Dynamic, modern, and highly customizable SVG badges to showcase your GitHub commit activity and consistency.</p>
+                <div class="header-buttons">
+                    <a href="#quick-start" class="btn btn-primary"><i class="fas fa-rocket"></i> Get Started</a>
+                    <a href="#builder" class="btn btn-secondary"><i class="fas fa-wand-magic-sparkles"></i> Live Builder</a>
+                </div>
             </header>
 
-            <nav class="nav">
-                <div class="nav-links">
-                    <a href="#quick-start" class="nav-link">Quick Start</a>
-                    <a href="#builder" class="nav-link">Badge Builder</a>
-                    <a href="#parameters" class="nav-link">Parameters</a>
-                    <a href="#examples" class="nav-link">Examples</a>
-                    <a href="#usage" class="nav-link">Usage</a>
-                </div>
-            </nav>
-
-            <section id="quick-start" class="section">
-                <h2>Quick Start</h2>
-                <p>Generate a badge for any GitHub user by replacing <span class="inline-code">USERNAME</span> with their GitHub username:</p>
-                <div class="code-block">${baseUrl}/commits?account=USERNAME</div>
-                <p><strong>Live example for "octocat":</strong></p>
-                <div class="preview" style="padding: 1rem;">
-                    <img src="/commits?account=octocat" alt="Basic commit badge example" />
-                </div>
-            </section>
-
-            <section id="builder" class="section">
-                <h2>Interactive Badge Builder</h2>
-                <p>Customize your badge in real-time and generate the perfect URL for your needs.</p>
-                <div class="builder">
-                    <div class="form-grid">
-                        <div class="form-group"><label class="form-label">GitHub Username</label><input type="text" id="username" class="form-input" placeholder="Enter username" value="octocat"></div>
-                        <div class="form-group"><label class="form-label">Time Period</label><select id="period" class="form-select"><option value="week">Week</option><option value="month" selected>Month</option><option value="quarter">Quarter</option><option value="half">Half Year</option><option value="year">Year</option></select></div>
-                        <div class="form-group"><label class="form-label">Theme</label><select id="theme" class="form-select"><option value="default" selected>Default</option><option value="dark">Dark</option><option value="github-dark">GitHub Dark</option><option value="dracula">Dracula</option><option value="monokai">Monokai</option><option value="gradient">Gradient</option><option value="ocean">Ocean</option><option value="sunset">Sunset</option><option value="neon">Neon</option></select></div>
-                        <div class="form-group"><label class="form-label">Style</label><select id="style" class="form-select"><option value="flat" selected>Flat</option><option value="flat-square">Flat Square</option><option value="plastic">Plastic</option><option value="for-the-badge">For The Badge</option></select></div>
-                        <div class="form-group"><label class="form-label">Animation</label><select id="animated" class="form-select"><option value="">No Animation</option><option value="pulse">Pulse</option><option value="glow">Glow</option><option value="slide">Slide</option></select></div>
-                        <div class="form-group"><label class="form-label">Icon</label><select id="icon" class="form-select"><option value="">No Icon</option><option value="fire">Fire</option><option value="rocket">Rocket</option><option value="trophy">Trophy</option><option value="star">Star</option><option value="code">Code</option><option value="chart">Chart</option></select></div>
-                    </div>
+            <main>
+                <section id="quick-start" class="section fade-in-section">
+                    <h2>Quick Start</h2>
+                    <p>Embed a real-time badge in your profiles or projects. Just replace <span class="inline-code">USERNAME</span> with a GitHub username.</p>
+                    <div class="code-block">${baseUrl}/commits?account=USERNAME</div>
+                    <p style="margin-top: 1.5rem; margin-bottom: 0.5rem;"><strong>Live example for "octocat":</strong></p>
                     <div class="preview">
-                        <img id="previewImg" src="/commits?account=octocat" alt="Badge preview">
-                        <div class="url-display" id="badgeUrl"></div>
+                        <img src="/commits?account=octocat&theme=dark" alt="Basic commit badge example" />
                     </div>
-                </div>
-            </section>
-
-            <section id="parameters" class="section">
-                <h2>Parameter Reference</h2>
-                <div class="params-grid">
-                    <div class="param-group">
-                        <h4>Core</h4>
-                        <div class="param-item"><span class="param-name">account</span><span class="param-desc">GitHub username (required)</span></div>
-                        <div class="param-item"><span class="param-name">period</span><span class="param-desc">week | month | quarter | half | year</span></div>
+                </section>
+                
+                <section id="builder" class="section fade-in-section">
+                    <h2>Interactive Badge Builder</h2>
+                    <p>Use the controls below to customize your badge in real-time. The URL will update automatically.</p>
+                    <div class="builder">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="username" class="form-label">GitHub Username</label>
+                                <input type="text" id="username" class="form-input" placeholder="e.g., octocat" value="octocat">
+                            </div>
+                            <div class="form-group">
+                                <label for="period" class="form-label">Time Period</label>
+                                <select id="period" class="form-select">
+                                    <option value="week">Week</option>
+                                    <option value="month" selected>Month</option>
+                                    <option value="quarter">Quarter</option>
+                                    <option value="half">Half Year</option>
+                                    <option value="year">Year</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="theme" class="form-label">Theme</label>
+                                <select id="theme" class="form-select">
+                                    <option value="default">Default</option>
+                                    <option value="dark" selected>Dark</option>
+                                    <option value="github-dark">GitHub Dark</option>
+                                    <option value="dracula">Dracula</option>
+                                    <option value="monokai">Monokai</option>
+                                    <option value="gradient">Gradient</option>
+                                    <option value="ocean">Ocean</option>
+                                    <option value="sunset">Sunset</option>
+                                    <option value="neon">Neon</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="style" class="form-label">Style</label>
+                                <select id="style" class="form-select">
+                                    <option value="flat" selected>Flat</option>
+                                    <option value="flat-square">Flat Square</option>
+                                    <option value="plastic">Plastic</option>
+                                    <option value="for-the-badge">For The Badge</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="preview">
+                            <img id="previewImg" src="/commits?account=octocat&theme=dark" alt="Badge preview">
+                            <div class="url-display" id="badgeUrl" title="Click to copy">/commits?account=octocat&theme=dark</div>
+                        </div>
                     </div>
-                    <div class="param-group">
-                        <h4>Visual Styling</h4>
-                        <div class="param-item"><span class="param-name">theme</span><span class="param-desc">Color theme preset</span></div>
-                        <div class="param-item"><span class="param-name">color</span><span class="param-desc">Custom color override</span></div>
-                        <div class="param-item"><span class="param-name">style</span><span class="param-desc">Badge style variant</span></div>
+                </section>
+
+                <section id="parameters" class="section fade-in-section">
+                    <h2>Parameter Reference</h2>
+                    <p>Combine these query parameters to further customize your badge.</p>
+                     <div class="cards-grid">
+                        <div class="card">
+                            <h4>Core</h4>
+                            <p><span class="inline-code">account</span> GitHub username (required).</p>
+                            <p><span class="inline-code">period</span> Values: week, month, quarter, half, year.</p>
+                        </div>
+                        <div class="card">
+                            <h4>Appearance</h4>
+                            <p><span class="inline-code">theme</span> Select from a list of color presets.</p>
+                            <p><span class="inline-code">style</span> Badge shape and style. Values: flat, plastic, etc.</p>
+                            <p><span class="inline-code">color</span> Custom hex color (e.g., 4f46e5) to override theme.</p>
+                        </div>
+                         <div class="card">
+                            <h4>Enhancements</h4>
+                            <p><span class="inline-code">icon</span> Values: fire, rocket, trophy, etc.</p>
+                            <p><span class="inline-code">animated</span> Values: pulse, glow, slide.</p>
+                            <p><span class="inline-code">sparkline</span> Show mini activity graph (true).</p>
+                            <p><span class="inline-code">border</span> Enable border outline (true).</p>
+                        </div>
                     </div>
-                    <div class="param-group">
-                        <h4>Enhancements</h4>
-                        <div class="param-item"><span class="param-name">animated</span><span class="param-desc">pulse | glow | slide</span></div>
-                        <div class="param-item"><span class="param-name">icon</span><span class="param-desc">Icon type to display</span></div>
-                        <div class="param-item"><span class="param-name">sparkline</span><span class="param-desc">Show activity graph (true)</span></div>
-                        <div class="param-item"><span class="param-name">border</span><span class="param-desc">Enable border outline (true)</span></div>
+                </section>
+                
+                <section id="examples" class="section fade-in-section">
+                    <h2>Theme Gallery & Examples</h2>
+                    <div class="cards-grid">
+                        <div class="card">
+                            <h4>Dracula & Rocket</h4>
+                            <img src="/commits?account=octocat&theme=dracula&icon=rocket" alt="Dracula theme">
+                            <div class="code-snippet">?theme=dracula&icon=rocket</div>
+                        </div>
+                        <div class="card">
+                            <h4>Gradient & Sparkline</h4>
+                            <img src="/commits?account=octocat&theme=gradient&sparkline=true" alt="Gradient theme">
+                            <div class="code-snippet">?theme=gradient&sparkline=true</div>
+                        </div>
+                        <div class="card">
+                            <h4>Neon with Glow</h4>
+                            <img src="/commits?account=octocat&theme=neon&animated=glow" alt="Neon theme">
+                            <div class="code-snippet">?theme=neon&animated=glow</div>
+                        </div>
+                        <div class="card">
+                            <h4>For The Badge Style</h4>
+                            <img src="/commits?account=octocat&theme=ocean&style=for-the-badge" alt="Ocean theme">
+                            <div class="code-snippet">?theme=ocean&style=for-the-badge</div>
+                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <section id="examples" class="section">
-                <h2>Theme Gallery & Examples</h2>
-                <div class="cards-grid">
-                    <div class="card"><h4>Dracula Theme</h4><img src="/commits?account=octocat&theme=dracula&icon=rocket" alt="Dracula theme"><div class="code-snippet">?theme=dracula&icon=rocket</div></div>
-                    <div class="card"><h4>Gradient & Sparkline</h4><img src="/commits?account=octocat&theme=gradient&sparkline=true" alt="Gradient theme"><div class="code-snippet">?theme=gradient&sparkline=true</div></div>
-                    <div class="card"><h4>Neon Glow Effect</h4><img src="/commits?account=octocat&theme=neon&animated=glow" alt="Neon theme"><div class="code-snippet">?theme=neon&animated=glow</div></div>
-                    <div class="card"><h4>Professional Style</h4><img src="/commits?account=octocat&theme=ocean&style=for-the-badge" alt="Ocean theme"><div class="code-snippet">?theme=ocean&style=for-the-badge</div></div>
-                </div>
-            </section>
-
-            <section id="usage" class="section">
-                <h2>Markdown & HTML Usage</h2>
-                <p>Copy and paste these examples into your README.md or HTML files.</p>
-                <h4 style="color: var(--primary-300); margin: 2rem 0 1rem 0;">Basic Markdown</h4>
-                <div class="code-block">![Daily Commits](${baseUrl}/commits?account=yourusername)</div>
-                <h4 style="color: var(--primary-300); margin: 2rem 0 1rem 0;">Styled Markdown</h4>
-                <div class="code-block">![Commits](${baseUrl}/commits?account=yourusername&theme=dark&icon=fire)</div>
-                <h4 style="color: var(--primary-300); margin: 2rem 0 1rem 0;">HTML Integration</h4>
-                <div class="code-block">&lt;img src="${baseUrl}/commits?account=yourusername&theme=dracula" alt="GitHub Commits" /&gt;</div>
-            </section>
-
-            <footer class="footer">
-                        Made with <span class="heart">❤️</span> by <a href="https://github.com/Prithvi-raptee" class="footer-link" style="color: var(--warning-500); font-weight: 500;" target="_blank" rel="noopener noreferrer">8bitSaiyan</a> for the developer community
-            </footer>
+                <footer class="footer fade-in-section">
+                    <p>Built for the open-source community.</p>
+                </footer>
+            </main>
         </div>
 
         <script>
-            function updatePreview() {
-                const username = document.getElementById('username').value.trim() || 'octocat';
-                const params = new URLSearchParams({ account: username });
-                const fields = ['period', 'theme', 'style', 'animated', 'icon'];
-                const defaults = { period: 'month', theme: 'default', style: 'flat' };
-                fields.forEach(id => {
-                    const el = document.getElementById(id);
-                    if (el.value && el.value !== (defaults[id] || '')) {
-                        params.set(id, el.value);
-                    }
+            document.addEventListener('DOMContentLoaded', function() {
+                
+                const aura = document.querySelector('.cursor-aura');
+                if (aura) {
+                    document.addEventListener('mousemove', (e) => {
+                        // --- FIX: Center the aura on the cursor by offsetting by half its size ---
+                        aura.style.transform = \`translate(\${e.clientX - aura.offsetWidth / 2}px, \${e.clientY - aura.offsetHeight / 2}px)\`;
+                    });
+
+                    document.querySelectorAll('a, button, input, select, .url-display, .card').forEach(el => {
+                        el.addEventListener('mouseenter', () => {
+                            aura.style.width = '600px';
+                            aura.style.height = '600px';
+                            aura.style.background = 'radial-gradient(circle, hsla(217, 91%, 59%, 0.15), transparent 70%)';
+                        });
+                         el.addEventListener('mouseleave', () => {
+                            aura.style.width = '400px';
+                            aura.style.height = '400px';
+                            aura.style.background = 'radial-gradient(circle, hsla(217, 91%, 59%, 0.1), transparent 70%)';
+                        });
+                    });
+                }
+                
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('is-visible');
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                document.querySelectorAll('.fade-in-section').forEach(section => {
+                    observer.observe(section);
                 });
-                const url = '/commits?' + params.toString();
-                document.getElementById('previewImg').src = url;
-                document.getElementById('badgeUrl').textContent = window.location.origin + url;
-            }
-            document.querySelectorAll('select, input').forEach(el => el.addEventListener('input', updatePreview));
-            window.addEventListener('load', updatePreview);
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+                
+                const mobileMenuButton = document.querySelector('.mobile-menu-button');
+                const navLinks = document.querySelector('.nav-links');
+                if (mobileMenuButton) {
+                    mobileMenuButton.addEventListener('click', () => {
+                        navLinks.classList.toggle('active');
+                    });
+                }
+                
+                function updatePreview() {
+                    const username = document.getElementById('username').value.trim() || 'octocat';
+                    const params = new URLSearchParams({ account: username });
+                    const fields = ['period', 'theme', 'style', 'animated', 'icon'];
+                    const defaults = { period: 'month', theme: 'dark', style: 'flat' };
+                    
+                    fields.forEach(id => {
+                        const el = document.getElementById(id);
+                        if (el && el.value && el.value !== (defaults[id] || '')) {
+                            params.set(id, el.value);
+                        }
+                    });
+                    
+                    const relativeUrl = '/commits?' + params.toString();
+                    const fullUrl = window.location.origin + relativeUrl;
+
+                    document.getElementById('previewImg').src = relativeUrl;
+                    
+                    const badgeUrlEl = document.getElementById('badgeUrl');
+                    badgeUrlEl.textContent = fullUrl;
+                }
+
+                document.querySelectorAll('#builder .form-input, #builder .form-select').forEach(el => {
+                    el.addEventListener('change', updatePreview);
+                    el.addEventListener('keyup', updatePreview);
                 });
+
+                document.getElementById('badgeUrl').addEventListener('click', function() {
+                    navigator.clipboard.writeText(this.textContent).then(() => {
+                        const originalText = this.textContent;
+                        this.textContent = 'Copied!';
+                        setTimeout(() => { this.textContent = originalText; }, 2000);
+                    });
+                });
+
+                updatePreview();
             });
         </script>
     </body>
-    </html>
-    `;
+    </html>`;
 };
 
 module.exports = { getDocumentationHTML };
