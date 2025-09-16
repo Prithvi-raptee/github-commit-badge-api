@@ -4,8 +4,6 @@ const { fetchAndCalculateAverage } = require('../utils/github');
 const { generateEnhancedSvgBadge, errorBadge } = require('../utils/svgGenerator');
 const { getDocumentationHTML } = require('../views/documentation');
 
-const { track } = require('@vercel/analytics/server');
-
 const app = express();
 
 // --- API Endpoint ---
@@ -16,11 +14,16 @@ app.get('/commits', async (req, res) => {
         return res.status(400).send('Missing GitHub account parameter.');
     }
 
-    track('Badge Generated', { 
-        account: account, 
-        period: period,
-        theme: theme 
-    });
+    try {
+        const { track } = await import('@vercel/analytics/server');
+        track('Badge Generated', { 
+            account: account, 
+            period: period,
+            theme: theme 
+        });
+    } catch (e) {
+        console.error('Vercel Analytics track failed:', e);
+    }
 
     const validPeriods = ['week', 'month', 'quarter', 'half', 'year'];
     const selectedPeriod = validPeriods.includes(period) ? period : 'month';
